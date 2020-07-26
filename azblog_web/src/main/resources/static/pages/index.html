@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta http-equiv="Access-Control-Allow-Origin" content="*" />
+    <title>后台管理系统</title>
+    <link rel="stylesheet" href="../layui/css/layui.css">
+    <link rel="stylesheet" href="../css/index.css">
+    <script src="../layui/layui.js"></script>
+    <script src="../js/index.js"></script>
+    <script src="../config.js"></script>
+
+</head>
+
+<body class="layui-layout-body">
+    <div class="layui-layout layui-layout-admin">
+        <!-- 头部区域 -->
+        <div class="layui-header">
+            <div class="layui-logo layui-hide-xs">博客后台管理系统</div>
+            <ul class="layui-logo layui-nav layui-layout-left layui-hide-sm">
+                <li class="layui-nav-item">
+                    <a href="javascript:;">
+                        <span>菜单</span>
+                    </a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="javascript:;">文章列表</a></dd>
+                        <dd><a href="javascript:;">问题列表</a></dd>
+                        <dd><a href="javascript:;">友情链接</a></dd>
+                        <dd><a href="javascript:;">网站设置</a></dd>
+                    </dl>
+                </li>
+            </ul>
+
+            <ul class="layui-nav layui-layout-right">
+                <li class="layui-nav-item">
+                    <a href="javascript:;">
+                        <img src="../images/head.png" class="layui-nav-img">
+                        <span id="username">用户名</span>
+                    </a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="javascript:;">基本资料</a></dd>
+                    </dl>
+                </li>
+                <li class="layui-nav-item" id="loginOut"><a href="javascript:;">退出</a></li>
+            </ul>
+        </div>
+
+        <div class="layui-side layui-bg-black layui-hide-xs">
+            <div class="layui-side-scroll">
+                <!-- 左侧导航区域 -->
+                <ul class="layui-nav layui-nav-tree" lay-filter="test">
+
+                    <li class="layui-nav-item layui-this" id="index">
+                        <a href="javascript:;">
+                            <i class="layui-icon layui-icon-home"><span>系统首页</span></i>
+                        </a>
+                    </li>
+
+                    <li class="layui-nav-item ">
+                        <a href="javascript:;"><i class="layui-icon layui-icon-tabs"><span>文章管理</span></i></a>
+                        <dl class="layui-nav-child">
+                            <dd><a href="javascript:;">文章列表</a></dd>
+                            <dd><a href="javascript:;">分类管理</a></dd>
+                            
+                        </dl>
+                    </li>
+
+                    <li class="layui-nav-item">
+                        <a href="javascript:;"><i class="layui-icon layui-icon-engine"><span>系统管理</span></i></a>
+                        <dl class="layui-nav-child">
+                            <dd><a href="javascript:;">用户管理</a></dd>
+                            <dd><a href="javascript:;">角色管理</a></dd>
+                            <dd><a href="javascript:;">接口管理</a></dd>
+                        </dl>
+                    </li>
+
+                    <li class="layui-nav-item">
+                        <a href="javascript:;"><i class="layui-icon layui-icon-link"><span>友情链接</span></i></a>
+                    </li>
+                    <li class="layui-nav-item">
+                        <a href="javascript:;"><i class="layui-icon layui-icon-website"><span>网站信息</span></i></a>
+                    </li>
+
+                    <li class="layui-nav-item">
+                        <a href="javascript:;"><i class="layui-icon layui-icon-app"><span>断路监控</span></i></a>
+                    </li>
+                    <li class="layui-nav-item">
+                        <a href="javascript:;"><i class="layui-icon layui-icon-video"><span>链路追踪</span></i></a>
+                    </li>
+                    <li class="layui-nav-item">
+                        <a href="javascript:;"><i class="layui-icon layui-icon-video"><span>接口文档</span></i></a>
+                    </li>
+
+                </ul>
+            </div>
+        </div>
+
+        <!-- 内容主体 -->
+        <div class="layui-body">
+            <!-- 面包屑导航 -->
+            <div class="layui-breadcrumb layui-layout-admin" id="bread">
+                <a href="javascript:;">系统首页</a>
+                <a href="javascript:;"></a>
+            </div>
+            <!-- 内容主体区域 -->
+            <div class="layui-layout-body" id="content">
+                <!-- 系统首页，搭建日期2018.1.8 -->
+                <iframe frameborder=no scrolling=yes class="admin-iframe" src="systemIndex.htm"> dd</iframe>
+            </div>
+
+        </div>
+        <!-- 底部固定区域 -->
+        <div class="layui-footer">
+            博客后台管理系统
+        </div>
+    </div>
+
+
+</body>
+
+</html>

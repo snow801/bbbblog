@@ -1,0 +1,24 @@
+spring:
+  cloud:
+    config:
+      name: gateway #应用名称，对应文件前部分
+      profile: dev #开发环境，对应文件后部分
+      label: master #git分支
+      discovery:
+        enabled: true
+        service-id: azblog-config
+
+#刷新配置的请求地址
+management:
+  endpoints:
+    web:
+      exposure:
+        include: bus-refresh
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8201/eureka #注册中心地址
+  instance:
+    prefer-ip-address: true
+    instance-id: ${spring.cloud.client.ip-address}:${server.port} #向服务中心注册自定义id
+    lease-renewal-interval-in-seconds: 50 #每次发送心跳的时间

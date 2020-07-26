@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="../layui\css\layui.css">
+    <script src="../layui\layui.all.js"></script>
+    <title>Document</title>
+    <style>
+        .layui-container {
+            margin-top: 60px;
+        }
+    </style>
+</head>
+
+<body>
+    <form class="layui-form layui-container">
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">编辑信息</label>
+            <div class="layui-input-block">
+                <textarea name="desc" id="descEndit" placeholder="请输入内容" class="layui-textarea"></textarea>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn" lay-submit lay-filter="formDemo">立即提交</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </div>
+    </form>
+
+    <script>
+        layui.use(['form', 'layedit', 'layer', 'laydate', 'jquery'], function () {
+            var form = layui.form;
+            var layedit = layui.layedit;
+            var layer = layui.layer;
+            var $ = layui.jquery;
+            var storage = window.localStorage;
+            var index = layedit.build('descEndit');
+
+            //显示信息
+            $.ajax({
+                url: 'http://localhost:8202/webInfo/webInfo',
+                type: 'get',
+                dataType: "json",
+                contentType: "application/json;charset=utf-8",
+                headers: {
+                    Authorization: storage.getItem('token')
+                },
+                success: function (res) {
+                    if (res.status == '200') {
+                        layedit.setContent(index, res.data[0].summary);
+                    } else {
+                        layer.msg(res.message)
+                    }
+                }
+            })
+
+            //提交修改
+            form.on('submit(formDemo)', function (data) {
+                var content = layedit.getContent(index);
+                $.ajax({
+                    url: 'http://localhost:8202/webInfo/webInfo/'+content,
+                    type: 'put',
+                    dataType: "json",
+                    contentType: "application/json;charset=utf-8",
+                    headers: {
+                        Authorization: storage.getItem('token')
+                    },
+                    success: function (res) {
+                        layer.msg(res.message);
+                    }
+                })
+                return false;
+            });
+        });
+    </script>
+</body>
+
+</html>

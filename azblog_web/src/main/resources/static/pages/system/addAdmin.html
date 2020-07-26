@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="../../layui/css/layui.css" media="all">
+    <script src="../../layui/layui.js" charset="utf-8"></script>
+    <script src="../../js/jquery-1.12.0.js"></script>
+    <script src="../../utils.js"></script>
+</head>
+
+<body>
+    <form class="layui-form" action="" style="margin: 6% 5%;">
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">用户名</label>
+            <div class="layui-input-inline">
+                <input type="text" name="username" required lay-verify="required" autocomplete="off"
+                    class="layui-input">
+            </div>
+        </div>
+        
+        <div class="layui-form-item">
+            <label class="layui-form-label">密码</label>
+            <div class="layui-input-inline">
+                <input type="password" name="password" required lay-verify="required" autocomplete="off"
+                    class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">状态</label>
+            <div class="layui-input-block">
+                <input type="checkbox" name="status" checked lay-skin="switch" lay-text="正常|锁定">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">角色</label>
+            <div class="layui-input-block">
+                <input type="checkbox" name="ADMIN" title="ADMIN" checked>
+                <input type="checkbox" name="ROOT" title="ROOT">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">性别</label>
+            <div class="layui-input-block">
+                <input type="radio" name="sex" value="男" title="男" checked>
+                <input type="radio" name="sex" value="女" title="女">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn" lay-submit type="button" lay-filter="formDemo">立即提交</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </div>
+    </form>
+
+    <script>
+        layui.use(['form', 'layedit', 'layer', 'laydate', 'jquery'], function () {
+            var form = layui.form;
+            var $ = layui.jquery;
+            var layer = layui.layer;
+            var storage = window.localStorage;
+            form.on('submit(formDemo)', function (data) {
+                var formData = getFormData('.layui-form');
+                var roles = [];
+                if (formData['ADMIN'] != undefined) {
+                    roles.push('ADMIN')
+                }
+                if (formData['ROOT'] != undefined) {
+                    roles.push('ROOT')
+                }
+                console.log(JSON.stringify(formData) + roles)
+                formData['resRoles'] = roles;
+                $.ajax({
+                    url: 'http://localhost:8202/admin/admin/',
+                    type: 'post',
+                    dataType: "json",
+                    contentType: "application/json;charset=utf-8",
+                    headers: {
+                        Authorization: storage.getItem('token')
+                    },
+                    data: JSON.stringify(formData),
+                    success: function (res) {
+                        if (res.status == '200') {
+                            //刷新父级页面，需要在服务器才能生效
+                            window.parent.location.reload();
+                        } else {
+                            layer.msg(res.message)
+                        }
+
+                    },
+                });
+            });
+
+
+        });
+    </script>
+</body>
+
+</html>

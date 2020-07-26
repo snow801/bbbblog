@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="azblog_admin" />
+        <module name="azblog_article" />
+        <module name="azblog_base" />
+        <module name="azblog_commom" />
+        <module name="azblog_config" />
+        <module name="azblog_eureka" />
+        <module name="azblog_gateway" />
+        <module name="azblog_search" />
+        <module name="azblog_Statistics" />
+        <module name="azblog_turbine" />
+        <module name="azblog_web" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="azblog" target="1.8" />
+      <module name="azblog_admin" target="1.8" />
+      <module name="azblog_article" target="1.8" />
+      <module name="azblog_base" target="1.8" />
+      <module name="azblog_commom" target="1.8" />
+      <module name="azblog_config" target="1.8" />
+      <module name="azblog_eureka" target="1.8" />
+      <module name="azblog_gateway" target="1.8" />
+      <module name="azblog_search" target="1.8" />
+      <module name="azblog_Statistics" target="1.8" />
+      <module name="azblog_turbine" target="1.8" />
+      <module name="azblog_web" target="1.8" />
+    </bytecodeTargetLevel>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="azblog_Statistics" options="-parameters" />
+      <module name="azblog_admin" options="-parameters" />
+      <module name="azblog_article" options="-parameters" />
+      <module name="azblog_base" options="-parameters" />
+      <module name="azblog_commom" options="-parameters" />
+      <module name="azblog_config" options="-parameters" />
+      <module name="azblog_eureka" options="-parameters" />
+      <module name="azblog_gateway" options="-parameters" />
+      <module name="azblog_search" options="-parameters" />
+      <module name="azblog_turbine" options="-parameters" />
+      <module name="azblog_web" options="-parameters" />
+    </option>
+  </component>
+</project>

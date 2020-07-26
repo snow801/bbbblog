@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>Layui</title>
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <link rel="stylesheet" href="../../layui/css/layui.css" media="all">
+  <script src="../../layui/layui.js" charset="utf-8"></script>
+  <style>
+    .layui-form {
+      margin-top: 3%
+    }
+  </style>
+</head>
+
+<body>
+  <div class="layui-container">
+    <form class="layui-form" id="addForm">
+      <div class="layui-form-item">
+        <label class="layui-form-label">标题</label>
+        <div class="layui-input-block">
+          <input type="text" name="title" value="" required lay-verify="required" placeholder="请输入标题" autocomplete="off"
+            class="layui-input">
+        </div>
+      </div>
+      <div class="layui-form-item">
+        <label class="layui-form-label">简介</label>
+        <div class="layui-input-block">
+          <input type="text" name="intro" required lay-verify="required" placeholder="请输入简介" autocomplete="off"
+            class="layui-input">
+        </div>
+      </div>
+
+      <div class="layui-form-item">
+        <label class="layui-form-label">分类</label>
+        <div class="layui-input-block">
+          <select name="category_id" id="loadCate" lay-verify="required">
+            <option value=""></option>
+
+          </select>
+        </div>
+      </div>
+
+      <div class="layui-form-item">
+        <label class="layui-form-label">操作</label>
+        <div class="layui-input-block">
+          <input type="checkbox" name="recommended" title="推荐">
+          <input type="checkbox" name="is_original" title="原创">
+        </div>
+      </div>
+      <div class="layui-form-item">
+        <label class="layui-form-label">状态</label>
+        <div class="layui-input-block">
+          <input type="checkbox" name="status" lay-skin="switch" lay-text="通过|待审">
+        </div>
+      </div>
+
+      <div class="layui-form-item layui-form-text">
+        <label class="layui-form-label">内容</label>
+        <div class="layui-input-block">
+          <textarea name="content" id="descEndit" class="layui-textarea"></textarea>
+        </div>
+      </div>
+      <div class="layui-form-item">
+        <div class="layui-input-block">
+          <button class="layui-btn" type="button" id="subBtn" lay-filter="formDemo">提交</button>
+          <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <script>
+
+    layui.use(['form', 'layedit', 'layer', 'laydate', 'jquery'], function () {
+      var form = layui.form;
+      var layedit = layui.layedit;
+      var $ = layui.jquery;
+      var layer = layui.layer;
+      var storage = window.localStorage;
+      var index = layedit.build('descEndit'); //建立编辑器
+      var articleId = storage.getItem('articleId');
+      var formData = {};
+      var articleDta = {};
+
+      //获取表单数据
+      function getFormData() {
+        var t = $('#addForm').serializeArray();
+        $.each(t, function () {
+          formData[this.name] = this.value;
+        });
+        formData['content'] = layedit.getContent(index);
+      }
+
+      //回显数据
+      $.ajax({
+        url: 'http://localhost:8202/article/article/' + articleId,
+        type: 'get',
+        dataType: "json",
+        contentType: "application/json;charset=utf-8",
+        headers: {
+          Authorization: storage.getItem('token')
+        },
+        success: function (res) {
+          articleDta = res.data;
+          $('form input').eq(0).val(articleDta.title);
+          $('form input').eq(1).val(articleDta.intro);
+          //获取分类
+          $.ajax({
+            url: 'http://localhost:8202/category/category/all',
+            type: 'get',
+            dataType: "json",
+            contentType: "application/json;charset=utf-8",
+            headers: {
+              Authorization: storage.getItem('token')
+            },
+            success: function (res) {
+              if (res.status == '200') {
+                var cate = $('#loadCate');
+                var data = res.data;
+                $.each(data, function (i, item) {
+                  var option = $('<option />');
+                  option.attr('value', item.id);
+                  option.text(item.name);
+                  option.appendTo(cate);
+                  //获取到分类并设置选中
+                  var categoryVal = $('form select').find('option');
+                  $.each(categoryVal, function (i, item) {
+                    if ($(item).val() == articleDta.category_id) {
+                      option.attr('selected', 'selected');
+                    };
+                  })
+                  form.render("select");
+                })
+              } else {
+                layer.msg(res.message)
+              }
+            }
+          })
+          //是否推荐
+          if (articleDta.recommended == 1) {
+            $('form input').eq(3).attr('checked', 'checked');
+            form.render('checkbox');
+          }
+          //是否原创
+          if (articleDta.is_original == 1) {
+            $('form input').eq(4).attr('checked', 'checked');
+            form.render('checkbox');
+          }
+          if (articleDta.status == 1) {
+            $('form input').eq(5).attr('checked', 'checked');
+            form.render('checkbox');
+          }
+          //回显内容
+          layedit.setContent(index, articleDta.content, false);
+
+        },
+      })
+
+      // 提交修改
+      $('#subBtn').click(function () {
+        getFormData();
+        formData['id'] = articleId;
+        $.ajax({
+          url: 'http://localhost:8202/article/article',
+          type: 'put',
+          dataType: "json",
+          contentType: "application/json;charset=utf-8",
+          headers: {
+            Authorization: storage.getItem('token')
+          },
+          data: JSON.stringify(formData),
+          success: function (res) {
+            if (res.status == 200) {
+              storage.removeItem('articleId');
+              location.href = 'articleList.html';
+            }else{
+              layer.msg(res.message);
+            }
+
+          },
+        })
+
+      })
+    });
+  </script>
+
+</body>
+
+</html>

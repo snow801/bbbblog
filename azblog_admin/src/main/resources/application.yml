@@ -1,0 +1,63 @@
+server:
+  port: 8200
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/a_blogs?useSSL=true&serverTimezone=UTC&useUnicode=true&characterEncoding=utf8
+    username: root
+    password: xxxx
+    driver-class-name: com.mysql.jdbc.Driver
+    type: com.alibaba.druid.pool.DruidDataSource
+  redis:
+    host: 122.51.252.120
+    port: 6379
+  application:
+    name: azblog-admin
+  zipkin:
+    #发送数据类型 kafaka、rabbitmq、web
+    sender:
+      type: rabbit
+    sleuth:
+      sampler:
+        probability: 1.0 #采样的比例
+  rabbitmq:
+    host: 192.168.25.136
+    port: 5672
+    username: guest
+    password: guest
+  cloud:
+    #消息总线
+    bus:
+      trace:
+        #开启消息跟踪
+        enabled: true
+  jpa:
+    show-sql: true
+    hibernate:
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+        implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyJpaImpl
+    database: mysql
+  mail:
+    username: 1478981855@qq.com
+    password: xxxxx
+    host: smtp.qq.com
+#日志级别
+logging:
+  level:
+    com:
+      wzn:
+        ablog:
+          admin: debug
+rsakey:
+  publicKeyName: MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQD4qpE7FRL2/7XDh2eGVoqdSIP0MYqZWETWWwW7+rfz7Ngzm+yNKeFiEK34pOvJEDgzcfqNOsL2pb1e0vyKsjFNz9SJU0xLMz8oz1sP+weCT4limJtH60xDPIg3tNdqLSaRhD1swjZEBnuIRanBYn9w0EojA8szCwW+AUgsjnS3twIDAQAB
+  privateKeyName: MIICdwIBADANBgkqhkiG9w0BAQEFAASCAmEwggJdAgEAAoGBAPiqkTsVEvb/tcOHZ4ZWip1Ig/QxiplYRNZbBbv6t/Ps2DOb7I0p4WIQrfik68kQODNx+o06wvalvV7S/IqyMU3P1IlTTEszPyjPWw/7B4JPiWKYm0frTEM8iDe012otJpGEPWzCNkQGe4hFqcFif3DQSiMDyzMLBb4BSCyOdLe3AgMBAAECgYAGCG1Zl5tMLswEIGbclYDra/T3mbQZIFEbOj4bX2vTGS3topzMl/WF4Y22+JlX2XLjnKJNht1wCnlbsZa67rPPeTsvi+fCggbMpKYdzQnhzfClrOJH+a9tpBiomV58NF44NtIW+LOToUA+/BSEE4hImX06BblqokaV8UiD8ymQsQJBAP2bozN4g1cRIhQDI/8NOX3ZDBaFKIG+m9qoFlMSQyXfM8aW0tjTJeYFnpoMQtOzgcX4J/5FLxwg50ilyswSBlsCQQD7Av9jPVWUe4YD/vlSpmzpxF1YjcXl8jrwzQUKVIRGUy/Y+RHlHN2XTZ+OEgmo0lpOnWj/LHAtz99vySWYR6rVAkAjdzl6gDb13RqD6/CDwYixtcHAAH0qr8pB6NG+akZjrHQkKIFx+w1Ivq5wYpiR3H+gfNSy9V/iMiPGABF9OmQTAkEAsx4KfBiSbyhOE5/o7k+QPKhBLCXO6C2YXakPRbXVxhEqfZwOZv3YKlXb25eHiQ7CHoM5H43oZuiFOtHAoA/UGQJBAMmrX+9q1hD0d9nudE/OGH4os2nevKukxV8SZDiOsxDlC1j5cGsUC6L1znfAH61XMeSom8Z7rVm3OuwKhmfztss=
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8201/eureka #注册中心地址
+  instance:
+    prefer-ip-address: true
+    instance-id: ${spring.cloud.client.ip-address}:${server.port} #向服务中心注册自定义id
+    lease-renewal-interval-in-seconds: 50 #每次发送心跳的时间
+
+

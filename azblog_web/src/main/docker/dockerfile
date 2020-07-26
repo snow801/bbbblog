@@ -1,0 +1,5 @@
+FROM lwieske/java-8
+VOLUME /tmp
+ADD discovery-1.0-SNAPSHOT.jar discovery.jar
+EXPOSE 8002
+CMD ["java","-Djava.security.egd=file:/dev/./urandom","-jar","discovery.jar"]

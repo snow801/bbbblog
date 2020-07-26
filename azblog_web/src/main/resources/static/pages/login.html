@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Access-Control-Allow-Origin" content="*" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="../layui\css\layui.css">
+    <script src="../layui/layui.js"></script>
+
+    <title>登录页面</title>
+    <style>
+        .layui-form {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 400px;
+            margin-top: -100px;
+            margin-left: -200px;
+        }
+
+        body {
+            background: url(../images/1001266.jpg) no-repeat center;
+        }
+    </style>
+</head>
+
+<body>
+
+    <form class="layui-form">
+        <div class="layui-card">
+            <div class="layui-card-header">系统登陆</div>
+            <div class="layui-card-body">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">用户名</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="username" required lay-verify="required" placeholder="请输入用户名或邮箱"
+                            autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">密&nbsp&nbsp&nbsp&nbsp码</label>
+                    <div class="layui-input-block">
+                        <input type="password" name="password" required lay-verify="required" placeholder="请输入密码"
+                            autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-input-block">
+                        <button class="layui-btn" lay-submit lay-filter="formDemo">立即登陆</button>
+                        <button type="button" id="reg" class="layui-btn">申请账号</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <script>
+        layui.use(['form', 'jquery'], function () {
+            var form = layui.form;
+            var $ = layui.jquery;
+            var storage = window.localStorage;
+
+            $('#reg').click(function () {
+                location.href = 'pages/register.html'
+            })
+
+            //监听提交
+            form.on('submit(formDemo)', function (data) {
+                layer.load(2);
+                $.ajax({
+                    url: 'http://localhost:8202/admin/admin/login',
+                    type: 'post',
+                    data: JSON.stringify(data.field),
+                    dataType: "json",
+                    contentType: "application/json;charset=utf-8",
+                    success: function (data) {
+                        layer.closeAll('loading');
+                        if (data.status == '200') {
+                            layer.msg(data.message, {
+                                icon: 6,//成功的表情
+                                time: 1000 //1秒关闭（如果不配置，默认是3秒）
+                            }, function () {
+                                storage.setItem('token', data.data);
+                                location.href = 'pages/index.html';
+                            });
+                        } else {
+                            layer.msg(data.message, { icon: 2, time: 1000 });
+                        }
+                    }
+                })
+                return false;
+            });
+        });
+    </script>
+</body>
+
+</html>

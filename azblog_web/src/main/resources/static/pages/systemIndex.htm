@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="../layui/css/layui.css">
+    <script src="../layui/layui.all.js"></script>
+    <script src="../layui/layui.js"></script>
+    <script src="../js/echarts.min.js"></script>
+    <script src="../js/jquery-1.12.0.js"></script>
+    <title>Document</title>
+    <style>
+        body {
+            background: #f2f2f2;
+            background: url(../images/1001266.jpg) no-repeat center;
+        }
+
+        .layui-container {
+            margin: 100px
+        }
+
+        .percentage {
+            margin-bottom: 25px;
+        }
+
+        .percentage p:nth-child(1) {
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .percentage p:nth-child(2) {
+            color: #555;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="layui-row layui-container">
+        <div class="layui-card layui-col-md3">
+            <div class="layui-card-header">在线用户</div>
+            <div class="layui-card-body">
+                <h3>0</h3>
+                <h4>当前在线用户</h4>
+            </div>
+        </div>
+        <div class="layui-card layui-col-md3 layui-col-md-offset1">
+            <div class="layui-card-header">文章数量</div>
+            <div class="layui-card-body">
+                <h3>0</h3>
+                <h4>文章数量/天</h4>
+            </div>
+        </div>
+        <div class="layui-card layui-col-md3 layui-col-md-offset1">
+            <div class="layui-card-header">网站访客</div>
+            <div class="layui-card-body">
+                <h3>0</h3>
+                <h4>网站访客</h4>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        layui.use(['element', 'jquery'], function () {
+            var element = layui.element;
+            var $ = layui.jquery;
+            var storage = window.localStorage;
+
+            //文章数
+            $.ajax({
+                url: 'http://127.0.0.1:8202/article/article/todayCount',
+                type: 'get',
+                headers: {
+                    Authorization: storage.getItem('token')
+                },
+                dataType: "json",
+                contentType: "application/json;charset=utf-8",
+                success: function (data) {
+                    if (data.status == '200') {
+                        $('.layui-container h3').eq(1).text(data.data);
+                    }
+                }
+            })
+
+            //在线人数
+            $.ajax({
+                url: 'http://127.0.0.1:8202/data/data/onlineCount',
+                type: 'get',
+                headers: {
+                    Authorization: storage.getItem('token')
+                },
+                dataType: "json",
+                contentType: "application/json;charset=utf-8",
+                success: function (data) {
+                    if (data.status == '200') {
+                        console.log(data.data);
+                        $('.layui-container h3').eq(0).text(data.data);
+                    }
+                }
+            })
+
+            //获取访客数
+            $.ajax({
+                url: 'http://127.0.0.1:8202/data/data/getVisitorCount',
+                type: 'get',
+                headers: {
+                    Authorization: storage.getItem('token')
+                },
+                dataType: "json",
+                contentType: "application/json;charset=utf-8",
+                success: function (data) {
+                    if (data.status == '200') {
+                        console.log(data.data);
+                        $('.layui-container h3').eq(2).text(data.data);
+                    }
+                }
+            })
+        });
+
+
+
+
+    </script>
+</body>
+
+</html>

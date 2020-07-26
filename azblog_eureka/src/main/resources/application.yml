@@ -1,0 +1,13 @@
+server:
+  port: 8201
+eureka:
+  instance:
+    hostname: 127.0.0.1
+  client:
+    register-with-eureka: false #是否将自己注册到注册中心
+    fetch-registry: false #是否从注册中心获取注册信息
+    service-url: #暴露地址给eureka客户端
+      defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka
+    server:
+      enable-self-preservation: false #关闭自我保护，剔除已关闭的服务.
+      eviction-interval-timer-in-ms: 4000 #剔除的间隔时间

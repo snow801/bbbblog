@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="../../layui/css/layui.css" media="all">
+    <script src="../../layui/layui.js" charset="utf-8"></script>
+</head>
+
+<body>
+    <form class="layui-form adminInfo" style="margin: 6% 5%;">
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">用户名</label>
+            <div class="layui-input-inline">
+                <input type="text" name="username" required lay-verify="required" autocomplete="off"
+                    class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">邮箱</label>
+            <div class="layui-input-inline">
+                <input type="text" name="mail" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">状态</label>
+            <div class="layui-input-block">
+                <input type="checkbox" name="status" lay-skin="switch" lay-text="正常|锁定">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">角色</label>
+            <div class="layui-input-block">
+                <select name="roleId" id="loadRole" lay-verify="required">
+                    <option value=""></option>
+
+                </select>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">性别</label>
+            <div class="layui-input-block">
+                <input type="radio" name="sex" value="男" title="男">
+                <input type="radio" name="sex" value="女" title="女">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn" type="button" lay-submit lay-filter="formDemo">立即提交</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </div>
+    </form>
+
+    <script>
+        layui.use(['form', 'layedit', 'layer', 'laydate', 'jquery'], function () {
+            var form = layui.form;
+            var $ = layui.jquery;
+            var storage = window.localStorage;
+            var adminId = storage.getItem('adminId');
+            var adminData = {};
+            //回显数据
+            $.ajax({
+                url: 'http://localhost:8202/admin/admin/' + adminId,
+                type: 'get',
+                dataType: "json",
+                contentType: "application/json;charset=utf-8",
+                headers: {
+                    Authorization: storage.getItem('token')
+                },
+                success: function (res) {
+                    if (res.status == '200') {
+                        adminData = res.data;
+                        $('.adminInfo input').eq(0).val(res.data.username);
+                        $('.adminInfo input').eq(1).val(res.data.email);
+
+                        //状态
+                        if (res.data.status == 1) {
+                            $('.adminInfo input').eq(2).attr('checked', 'checked');
+                            form.render('checkbox');
+                        }
+
+                        //角色
+                        $.ajax({
+                            url: 'http://localhost:8202/role/role/allRole',
+                            type: 'get',
+                            dataType: "json",
+                            contentType: "application/json;charset=utf-8",
+                            headers: {
+                                Authorization: storage.getItem('token')
+                            },
+                            success: function (res) {
+                                if (res.status == '200') {
+                                    var select = $('#loadRole');
+                                    $.each(res.data, function (i, item) {
+                                        var option = $('<option />');
+                                        option.attr('value', item.role_id);
+                                        option.text(item.role_name);
+                                        option.appendTo(select);
+                                        if (item.role_id == adminData.roles[0].role_id) {
+                                            option.attr('selected', 'selected');
+                                        };
+                                        form.render("select");
+                                    })
+
+                                } else {
+                                    layer.msg(res.message)
+                                }
+
+                            },
+                        });
+
+                        //性别
+                        if (res.data.sex == '男') {
+                            $('.adminInfo input').eq(4).attr('checked', 'checked');
+                            form.render('radio');
+                        } else {
+                            $('.adminInfo input').eq(5).attr('checked', 'checked');
+                            form.render('radio');
+                        }
+
+                    } else {
+                        layer.msg(res.message);
+                    }
+                },
+            });
+
+            //提交修改
+            form.on('submit(formDemo)', function (data) {
+                var formData = getFormData('.layui-form');
+                formData['id'] = adminId;
+                $.ajax({
+                    url: 'http://localhost:8202/admin/admin/',
+                    type: 'put',
+                    dataType: "json",
+                    contentType: "application/json;charset=utf-8",
+                    headers: {
+                        Authorization: storage.getItem('token')
+                    },
+                    data: JSON.stringify(formData),
+                    success: function (res) {
+                        if (res.status == '200') {
+                            //刷新父级页面，需要在服务器才能生效
+                            window.parent.location.reload();
+                        } else {
+                            layer.msg(res.message)
+                        }
+
+                    },
+                });
+            })
+
+            //获取表单数据
+            function getFormData(classname) {
+                var formData = {};
+                var t = $(classname).serializeArray();
+                $.each(t, function () {
+                    formData[this.name] = this.value;
+                });
+                return formData;
+            }
+
+        });
+    </script>
+</body>
+
+</html>

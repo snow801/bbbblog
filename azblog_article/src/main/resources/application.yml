@@ -1,0 +1,67 @@
+server:
+  port: 8203
+spring:
+  application:
+    name: azblog-article
+  datasource:
+    url: jdbc:mysql://localhost:3306/a_blogs?useSSL=true&serverTimezone=UTC&useUnicode=true&characterEncoding=utf8
+    username: root
+    password: xxxx
+    driver-class-name: com.mysql.jdbc.Driver
+    type: com.alibaba.druid.pool.DruidDataSource
+  jpa:
+    open-in-view: true
+    show-sql: true
+  redis:
+    host: 122.51.252.120
+    port: 6379
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+  zipkin:
+#    base-url: http://127.0.0.1:9411
+    #发送数据类型 kafaka、rabbitmq、web
+    sender:
+      type: rabbit
+    sleuth:
+      sampler:
+        probability: 1.0 #采样的比例
+  rabbitmq:
+    host: 122.51.252.120
+    username: guest
+    password: guest
+  cloud:
+    stream:
+      binders:
+        defaultRabbit:
+          type: rabbit
+      bindings:
+        output:
+          destination: article
+#日志级别
+logging:
+  level:
+    com:
+      wzn:
+        ablog:
+          article: debug
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8201/eureka #注册中心地址
+  instance:
+    prefer-ip-address: true
+    instance-id: ${spring.cloud.client.ip-address}:${server.port} #向服务中心注册自定义id
+    lease-renewal-interval-in-seconds: 50 #每次发送心跳的时间
+rsakey:
+  publicKeyName: MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQD4qpE7FRL2/7XDh2eGVoqdSIP0MYqZWETWWwW7+rfz7Ngzm+yNKeFiEK34pOvJEDgzcfqNOsL2pb1e0vyKsjFNz9SJU0xLMz8oz1sP+weCT4limJtH60xDPIg3tNdqLSaRhD1swjZEBnuIRanBYn9w0EojA8szCwW+AUgsjnS3twIDAQAB
+
+# 在被监控的hystrix服务上添加暴露点
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+feign:
+  hystrix:
+    enabled: true

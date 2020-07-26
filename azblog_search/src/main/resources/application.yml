@@ -1,0 +1,47 @@
+server:
+  port: 8204
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8201/eureka #注册中心地址
+  instance:
+    prefer-ip-address: true
+    instance-id: ${spring.cloud.client.ip-address}:${server.port} #向服务中心注册自定义id
+    lease-renewal-interval-in-seconds: 50 #每次发送心跳的时间
+spring:
+  data:
+    elasticsearch:
+      cluster-nodes: 127.0.0.1:9300
+  application:
+    name: azblog-search
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+  rabbitmq:
+    host: 122.51.252.120
+    username: guest
+    password: guest
+  zipkin:
+    #发送数据类型 kafaka、rabbitmq、web
+    sender:
+      type: rabbit
+    sleuth:
+      sampler:
+        probability: 1.0 #采样的比例
+  cloud:
+    stream:
+      binders:
+        defaultRabbit:
+          type: rabbit
+      bindings:
+        input:
+          destination: article
+feign:
+  hystrix:
+    enabled: true
+# 在被监控的服务上添加暴露点
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"  #代表开放所有端点

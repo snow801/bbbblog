@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="../js/jquery-1.12.0.js"></script>
+</head>
+<body>
+    <script>
+        $.ajax({
+            url: 'http://122.51.252.120:8080/newsapp/user/login',
+            type: 'post',
+            dataType: "json",
+            contentType: "application/json;charset=utf-8",
+          
+            success: function (data) {
+                alert(data.data);
+            }
+        })
+    </script>
+</body>
+</html>

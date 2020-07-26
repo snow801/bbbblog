@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <link rel="stylesheet" href="../../layui/css/layui.css">
+  <link rel="stylesheet" href="../../css/category .css">
+  <script src="../../layui/layui.all.js"></script>
+
+</head>
+
+<body>
+  <!-- 搜索 -->
+  <form class="layui-form">
+    <div id="search" class="layui-form-item">
+
+      <div class="layui-input-block">
+        <input type="text" name="title" required lay-verify="required" placeholder="请输入搜索内容" autocomplete="off"
+          class="layui-input searchContent">
+      </div>
+
+      <div id="searchBtn" class="layui-input-block">
+        <button class="layui-btn" lay-submit lay-filter="search">搜索</button>
+        <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+      </div>
+    </div>
+  </form>
+  <!-- 数据 -->
+  <table class="layui-hide" id="list" lay-filter="list">
+
+    <script type="text/html" id="toolbar">
+
+  <div class="layui-btn-container">
+    <button class="layui-btn layui-btn-sm" lay-event="add">添加</button>
+    <button class="layui-btn layui-btn-sm" lay-event="delMore">删除</button>
+  </div>
+  </script>
+    <script type="text/html" id="bar">
+    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+    <a class="layui-btn layui-btn-xs" lay-event="editRole">权限管理</a>
+  </script>
+
+
+    <script>
+      layui.use(['table', 'jquery', 'form'], function () {
+        var table = layui.table;
+        var storage = window.localStorage;
+        var $ = layui.jquery;
+        var form = layui.form;
+        
+        table.render({
+          elem: '#list'
+          , url: 'http://localhost:8202/role/role/roleList'
+          , toolbar: '#toolbar' //开启头部工具栏，并为其绑定左侧模板
+          , title: '用户数据表'
+          , headers: {
+            Authorization: storage.getItem('token')
+          }
+          , cols: [[
+            { type: 'checkbox', fixed: 'left' }
+            , { field: 'role_id', title: 'id', width: 120, fedit: 'text', unresize: true, sort: true }
+            , { field: 'role_name', title: '角色名', width: 120, edit: 'text' }
+            , { field: 'comments', title: '备注' }
+            , { field: 'right', title: '操作', toolbar: '#bar' }
+          ]]
+          , page: {
+            layout: ['count', 'prev', 'page', 'next', 'skip'] //自定义分页布局
+            , groups: 5 //显示的连续页码
+            , first: false //不显示首页
+            , last: false //不显示尾页
+          }
+          , parseData: function (res) { //res 即为原始返回的数据
+            return {
+              "code": res.status, //解析接口状态
+              "msg": res.message, //解析提示文本
+              "data": res.data,
+              "count": res.total,
+            }
+          }
+        });
+
+        //头工具栏事件
+        table.on('toolbar(list)', function (obj) {
+          var checkStatus = table.checkStatus(obj.config.id);
+          switch (obj.event) {
+            case 'add'://添加
+              layer.open({
+                title: '添加权限',
+                type: 2,
+                shade: false,
+                area: ['430px', '420px'],
+                offset: ['25px', '25%'],
+                content: 'addRole.html',
+                shade: [0.3, '#393D49'], //遮罩层
+                zIndex: layer.zIndex,
+                success: function (layero) {
+                  layer.setTop(layero); //设置窗口为最顶层
+                }
+              });
+              break;
+            case 'delMore'://批量删除
+
+              break;
+          };
+        });
+
+        //监听行工具事件
+        table.on('tool(list)', function (obj) {
+          var data = obj.data;
+          if (obj.event === 'del') {//单个删除
+            layer.open({
+              content: '确定要删除该角色？',
+              yes: function (index, layero) {
+                
+                $.ajax({
+                  url: 'http://localhost:8202/role/role/' + data.role_id,
+                  type: 'delete',
+                  dataType: "json",
+                  contentType: "application/json;charset=utf-8",
+                  headers: {
+                    Authorization: storage.getItem('token')
+                  },
+                  success: function (res) {
+                    if (res.status == '200') {
+                      layer.msg(res.message);
+                      
+                    } else {
+                      layer.msg(res.message)
+                    }
+                  },
+                });
+                layer.close(index);
+                table.reload('list', {});
+              }
+            });
+
+
+          } else if (obj.event === 'edit') {//编辑
+            $.ajax({
+              url: 'http://localhost:8202/role/role/' + data.role_id,
+              type: 'get',
+              dataType: "json",
+              contentType: "application/json;charset=utf-8",
+              headers: {
+                Authorization: storage.getItem('token')
+              },
+              success: function (res) {
+                if (res.status == '200') {
+                  layer.open({
+                    title: '角色编辑',
+                    type: 2,
+                    shade: false,
+                    area: ['430px', '400px'],
+                    offset: ['25px', '25%'],
+                    content: 'editRole.html',
+                    shade: [0.3, '#393D49'], //遮罩层
+                    zIndex: layer.zIndex,
+                    success: function (layero) {
+                      storage.setItem('roleId', data.role_id);
+                      layer.setTop(layero); //设置窗口为最顶层
+                    }
+                  });
+                } else {
+                  layer.msg(res.message)
+                }
+              },
+            });
+
+          } else if (obj.event === 'editRole') {
+            layer.open({
+              title: '权限管理',
+              type: 2,
+              shade: false,
+              area: ['730px', '400px'],
+              offset: ['25px', '25%'],
+              content: 'port.html',
+              shade: [0.3, '#393D49'], //遮罩层
+              zIndex: layer.zIndex,
+              success: function (layero) {
+                storage.setItem('roleId', data.role_id);
+                layer.setTop(layero); //设置窗口为最顶层
+              }
+            });
+          }
+        });
+
+        //搜索
+        form.on('submit(search)', function (data) {
+          var keyword = $('.searchContent').val();
+          console.log(keyword);
+          table.reload('list', {
+            url: 'http://localhost:8202/role/role/search/' + keyword
+          });
+          return false;
+        })
+
+        //重置
+        $('#searchBtn button').eq(1).click(function () {
+          table.reload('list', {
+            url: 'http://localhost:8202/role/role/roleList'
+          });
+        })
+      });
+    </script>
+</body>
+
+</html>

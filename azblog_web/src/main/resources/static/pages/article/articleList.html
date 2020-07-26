@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta http-equiv="Access-Control-Allow-Origin" content="*" />
+  <title>Document</title>
+  <link rel="stylesheet" href="../../layui/css/layui.css" media="all">
+  <link rel="stylesheet" href="../../css/article/articleList.css">
+  <script src="../../layui/layui.js"></script>
+</head>
+
+<body>
+  <!-- 搜索 -->
+  <div id="search" class="layui-form-item">
+    <div class="layui-input-block">
+      <input type="text" name="title" id="searchVal" placeholder="请输入搜索内容" autocomplete="off"
+        class="layui-input">
+    </div>
+    <div id="searchBtn" class="layui-input-block">
+      <button class="layui-btn" id="searchArticle">搜索</button>
+      <button type="reset" class="layui-btn layui-btn-primary reset">重置</button>
+    </div>
+  </div>
+
+  <!-- 表格数据 -->
+  <table class="layui-hide" id="list" lay-filter="tool">
+
+    <script type="text/html" id="toolbarDemo">
+
+  <div class="layui-btn-container">
+    <button class="layui-btn layui-btn-sm" lay-event="add">添加</button>
+    <button class="layui-btn layui-btn-sm" lay-event="delMore">删除</button>
+
+  </div>
+  </script>
+    <script type="text/html" id="barDemo">
+    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+  </script>
+
+    <!-- 表单的id用于表单的选择，style是在本页隐藏，只有点击编辑才会弹出 -->
+    <div class="layui-fluid" id="popUpdateTest" style="display:none;">
+
+
+    </div>
+    <script src="../../js/articleList.js"></script>
+
+
+</body>
+
+</html>

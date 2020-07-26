@@ -1,0 +1,34 @@
+server:
+  port: 8206
+spring:
+  application:
+    name: azblog-base
+  datasource:
+    url: jdbc:mysql://localhost:3306/a_blogs?useSSL=true&serverTimezone=UTC&useUnicode=true&characterEncoding=utf8
+    username: root
+    password: xxxx
+    driver-class-name: com.mysql.jdbc.Driver
+    type: com.alibaba.druid.pool.DruidDataSource
+  jpa:
+    open-in-view: true
+    show-sql: true
+  zipkin:
+    #发送数据类型 kafaka、rabbitmq、web
+    sender:
+      type: rabbit
+    sleuth:
+      sampler:
+        probability: 1.0 #采样的比例
+  rabbitmq:
+    host: 122.51.252.120
+    port: 5672
+    username: guest
+    password: guest
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8201/eureka #注册中心地址
+  instance:
+    prefer-ip-address: true
+    instance-id: ${spring.cloud.client.ip-address}:${server.port} #向服务中心注册自定义id
+    lease-renewal-interval-in-seconds: 50 #每次发送心跳的时间

@@ -1,0 +1,21 @@
+.layui-input-block{ 
+    display: inline-block;
+    margin-left: 1%
+}
+
+#search span{
+    margin-right: 0.5%;
+    margin-left: 1%
+}
+
+#searchBtn{
+    margin-top: 10px;
+}
+
+.layui-form-item{
+    text-align: right;
+}
+
+.layui-form-item{
+    text-align: right;
+}
