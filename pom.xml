@@ -37,7 +37,7 @@
         <jackson.verson>2.10.0</jackson.verson>
         <joda-time>2.10.5</joda-time>
         <lang3.verson>3.3.2</lang3.verson>
-        <fastjson.verson>1.2.58</fastjson.verson>
+        <fastjson.verson>1.2.83</fastjson.verson>
         <zipkin.verson>2.2.2</zipkin.verson>
     </properties>
 
