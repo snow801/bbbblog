@@ -34,7 +34,7 @@
         <swagger.verson>2.9.2</swagger.verson>
         <druid.verson>1.1.20</druid.verson>
         <mysql.connector.verson>8.0.16</mysql.connector.verson>
-        <jackson.verson>2.10.0</jackson.verson>
+        <jackson.verson>2.12.7.1</jackson.verson>
         <joda-time>2.10.5</joda-time>
         <lang3.verson>3.3.2</lang3.verson>
         <fastjson.verson>1.2.58</fastjson.verson>
